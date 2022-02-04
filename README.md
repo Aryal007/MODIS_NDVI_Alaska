@@ -6,3 +6,5 @@ Copy the images locally to corresponding data directory
 * tiff_analysis.ipynb
 * get_csv.ipynb
 * csv_analysis.ipynb
+* get_plot_inputs.ipynb
+* view_plots.ipynb

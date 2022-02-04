@@ -164,7 +164,7 @@ def reproject_tiff(tiff_fname, dst_crs, out_dir):
                     dst_crs=dst_crs,
                     resampling=Resampling.nearest)
 
-def vis_tiff(tiff_fname, mask=False, vmax=False):
+def vis_tiff(tiff_fname, mask=False, vmax=False, vflip=False):
     minimum, maximum = -2000, 10000 
     x = np.squeeze(rasterio.open(tiff_fname).read())
     x = (x-minimum) / (maximum - minimum)
@@ -173,17 +173,21 @@ def vis_tiff(tiff_fname, mask=False, vmax=False):
         x[mask == 0] = 0
     plt.figure()
     plt.title(os.path.basename(tiff_fname))
+    if vflip:
+        x = x[::-1, :]
     if vmax:
         plt.imshow(x, cmap="RdYlGn", vmax=vmax)
     else:
         plt.imshow(x, cmap="RdYlGn")
     plt.colorbar()
 
-def save_tiff_numpy(out_dir, tiff_fname, mask):
+def save_tiff_numpy(out_dir, tiff_fname, mask, vflip=False):
     print(f"Filename: {tiff_fname}")
     x = np.squeeze(rasterio.open(tiff_fname).read())
     mask = np.squeeze(mask)
     x[mask == 0] = -2000
     x = x.astype(np.int16)
+    if vflip:
+        x = x[::-1, :]
     fname = os.path.basename(tiff_fname).split(".")[0]
     np.save(out_dir / fname, x)
